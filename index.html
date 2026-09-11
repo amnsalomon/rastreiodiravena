@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rastrear pedido · diRavena</title>
-<meta name="description" content="Acompanhe a entrega do seu pedido diRavena. Digite o CPF da compra ou o código de rastreio recebido por e-mail.">
+<meta name="description" content="Acompanhe a entrega do seu pedido diRavena. Digite o código de rastreio recebido por e-mail e veja as movimentações de qualquer transportadora.">
 <meta name="theme-color" content="#ebb114">
 <meta property="og:title" content="Rastrear pedido · diRavena">
 <meta property="og:description" content="Acompanhe a entrega do seu pedido diRavena.">
@@ -15,8 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ---------------------------------------------------------------
-   diRavena · Rastreio
-   Paleta e tipografia alinhadas à loja diravena.com.br
+   diRavena · Rastreio  —  consultas via Melhor Rastreio
 ------------------------------------------------------------------ */
 :root{
   --gold:#ebb114;
@@ -57,19 +56,11 @@ a{color:inherit}
   border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:20;
 }
-.header-bar{
-  display:flex;align-items:center;gap:18px;
-  min-height:72px;
-}
-.brand{
-  font-weight:800;font-size:1.45rem;letter-spacing:-.02em;
-  text-decoration:none;margin-right:auto;
-}
+.header-bar{display:flex;align-items:center;gap:18px;min-height:72px}
+.brand{font-weight:800;font-size:1.45rem;letter-spacing:-.02em;text-decoration:none;margin-right:auto}
 .brand span{color:var(--gold-deep)}
 .header-nav{display:flex;align-items:center;gap:22px}
-.header-nav a{
-  text-decoration:none;font-size:.95rem;font-weight:600;color:var(--ink-soft);
-}
+.header-nav a{text-decoration:none;font-size:.95rem;font-weight:600;color:var(--ink-soft)}
 .header-nav a:hover{color:var(--ink)}
 .header-whats{
   display:inline-flex;align-items:center;gap:8px;
@@ -95,28 +86,30 @@ a{color:inherit}
   text-align:center;
 }
 .parcel{margin:0 auto 18px;width:64px;height:64px;display:block}
-h1{
-  font-size:2rem;line-height:1.2;letter-spacing:-.02em;
-  margin:0 0 10px;font-weight:800;
+h1{font-size:2rem;line-height:1.2;letter-spacing:-.02em;margin:0 0 10px;font-weight:800}
+.tracker-sub{margin:0 auto 26px;max-width:46ch;color:var(--ink-soft);font-size:1.02rem}
+.carriers{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin:-14px auto 24px;max-width:52ch;
 }
-.tracker-sub{
-  margin:0 auto 26px;max-width:46ch;
-  color:var(--ink-soft);font-size:1.02rem;
+.carriers span{
+  font-size:.8rem;font-weight:700;color:var(--ink-soft);
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:4px 12px;
 }
 .field{display:flex;flex-direction:column;gap:10px;text-align:left}
 .field label{font-weight:700;font-size:.95rem}
 .input-row{display:flex;gap:12px}
 #codigo{
   flex:1;min-width:0;
-  font-family:inherit;font-size:1.15rem;font-weight:600;
-  letter-spacing:.02em;
+  font-family:inherit;font-size:1.15rem;font-weight:600;letter-spacing:.02em;
   padding:16px 18px;
-  border:2px solid var(--line);
-  border-radius:var(--radius);
+  border:2px solid var(--line);border-radius:var(--radius);
   background:var(--white);color:var(--ink);
+  text-transform:uppercase;
   transition:border-color .15s ease, box-shadow .15s ease;
 }
-#codigo::placeholder{color:#b3ab9c;font-weight:500;letter-spacing:0}
+#codigo::placeholder{color:#b3ab9c;font-weight:500;letter-spacing:0;text-transform:none}
 #codigo:focus{border-color:var(--gold);box-shadow:0 0 0 4px var(--gold-soft);outline:none}
 #codigo.is-invalid{border-color:var(--alert)}
 .btn-search{
@@ -135,7 +128,6 @@ h1{
   h1{font-size:1.6rem}
 }
 
-/* mensagem de estado abaixo do campo */
 .hint{
   min-height:24px;margin:10px 2px 0;
   font-size:.93rem;color:var(--ink-soft);
@@ -145,7 +137,6 @@ h1{
 .hint.is-error{color:var(--alert);font-weight:600}
 .hint .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
 
-/* buscas recentes */
 .recent{margin-top:20px;text-align:left;display:none}
 .recent.is-visible{display:block}
 .recent p{margin:0 0 8px;font-size:.85rem;font-weight:700;color:var(--ink-soft)}
@@ -174,10 +165,7 @@ h1{
 .result.is-visible{display:block}
 .result h2{margin:0 0 6px;font-size:1.15rem;font-weight:800}
 .result p{margin:0 0 16px;color:var(--ink-soft);font-size:.98rem}
-.result-code{
-  display:inline-block;font-weight:800;color:var(--ink);
-  background:var(--gold-soft);border-radius:8px;padding:2px 8px;
-}
+.result-code{display:inline-block;font-weight:800;color:var(--ink);background:var(--gold-soft);border-radius:8px;padding:2px 8px}
 .result-actions{display:flex;flex-wrap:wrap;gap:10px}
 .btn{
   font-family:inherit;font-size:.95rem;font-weight:700;
@@ -194,13 +182,8 @@ h1{
 .section-head{max-width:660px;margin:0 auto 26px}
 .section-head h2{font-size:1.5rem;letter-spacing:-.015em;margin:0 0 8px;font-weight:800}
 .section-head p{margin:0;color:var(--ink-soft)}
-.steps-list{
-  max-width:660px;margin:0 auto;padding:0;list-style:none;
-  counter-reset:etapa;
-}
-.steps-list li{
-  position:relative;padding:0 0 26px 54px;counter-increment:etapa;
-}
+.steps-list{max-width:660px;margin:0 auto;padding:0;list-style:none;counter-reset:etapa}
+.steps-list li{position:relative;padding:0 0 26px 54px;counter-increment:etapa}
 .steps-list li::before{
   content:counter(etapa);
   position:absolute;left:0;top:0;
@@ -209,9 +192,7 @@ h1{
   font-weight:800;font-size:.95rem;
   display:flex;align-items:center;justify-content:center;
 }
-.steps-list li::after{
-  content:"";position:absolute;left:16px;top:38px;bottom:6px;width:2px;background:var(--line);
-}
+.steps-list li::after{content:"";position:absolute;left:16px;top:38px;bottom:6px;width:2px;background:var(--line)}
 .steps-list li:last-child{padding-bottom:0}
 .steps-list li:last-child::after{display:none}
 .steps-list h3{margin:4px 0 4px;font-size:1.05rem;font-weight:700}
@@ -220,16 +201,9 @@ h1{
 /* ---------- Perguntas ---------- */
 .faq{padding:52px 0 20px}
 .faq-list{max-width:660px;margin:0 auto}
-details{
-  background:var(--white);border:1px solid var(--line);
-  border-radius:var(--radius);margin-bottom:10px;overflow:hidden;
-}
+details{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
 details[open]{border-color:#ddd3bd}
-summary{
-  cursor:pointer;list-style:none;
-  padding:16px 46px 16px 20px;
-  font-weight:700;font-size:1rem;position:relative;
-}
+summary{cursor:pointer;list-style:none;padding:16px 46px 16px 20px;font-weight:700;font-size:1rem;position:relative}
 summary::-webkit-details-marker{display:none}
 summary::after{
   content:"";position:absolute;right:20px;top:50%;
@@ -246,12 +220,7 @@ summary:hover{background:var(--paper)}
 
 /* ---------- Ajuda ---------- */
 .help{padding:36px 0 60px}
-.help-card{
-  max-width:660px;margin:0 auto;
-  background:var(--ink);color:#f3eee2;
-  border-radius:var(--radius-lg);
-  padding:30px 28px;
-}
+.help-card{max-width:660px;margin:0 auto;background:var(--ink);color:#f3eee2;border-radius:var(--radius-lg);padding:30px 28px}
 .help-card h2{margin:0 0 8px;font-size:1.35rem;color:var(--white);font-weight:800}
 .help-card p{margin:0 0 20px;color:#c9c0ad;font-size:1rem}
 .help-actions{display:flex;flex-wrap:wrap;gap:12px}
@@ -261,10 +230,7 @@ summary:hover{background:var(--paper)}
 .help-actions .btn-ghost:hover{background:#3a3122;border-color:#8a7c62}
 
 /* ---------- Rodapé ---------- */
-.site-footer{
-  background:var(--white);border-top:1px solid var(--line);
-  padding:34px 0;font-size:.9rem;color:var(--ink-soft);
-}
+.site-footer{background:var(--white);border-top:1px solid var(--line);padding:34px 0;font-size:.9rem;color:var(--ink-soft)}
 .footer-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:flex-start}
 .footer-grid a{color:var(--ink-soft);text-decoration:none}
 .footer-grid a:hover{color:var(--ink);text-decoration:underline}
@@ -272,7 +238,6 @@ summary:hover{background:var(--paper)}
 .footer-links{display:flex;flex-wrap:wrap;gap:18px}
 .footer-legal{width:100%;border-top:1px solid var(--line);padding-top:16px;font-size:.82rem}
 
-/* toast */
 .toast{
   position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120%);
   background:var(--ink);color:var(--white);
@@ -281,13 +246,8 @@ summary:hover{background:var(--paper)}
   transition:transform .25s ease;z-index:60;
 }
 .toast.is-visible{transform:translateX(-50%) translateY(0)}
-@media (prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important}
-}
-.visually-hidden{
-  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
-}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
@@ -321,14 +281,16 @@ summary:hover{background:var(--paper)}
         </svg>
 
         <h1>Rastrear pedido</h1>
-        <p class="tracker-sub">Digite o CPF usado na compra ou o código de rastreio que enviamos para o seu e-mail. Identificamos a transportadora automaticamente.</p>
+        <p class="tracker-sub">Digite o código de rastreio que enviamos para o seu e-mail. Uma única busca cobre todas as transportadoras que usamos.</p>
+        <div class="carriers" aria-label="Transportadoras cobertas">
+          <span>Correios</span><span>Jadlog</span><span>Loggi</span><span>Azul Cargo</span><span>LATAM Cargo</span><span>Buslog</span>
+        </div>
 
         <form id="form-rastreio" class="field" novalidate>
-          <label for="codigo">CPF ou código de rastreio</label>
+          <label for="codigo">Código de rastreio</label>
           <div class="input-row">
             <input id="codigo" name="codigo" type="text" inputmode="text" autocomplete="off"
-                   spellcheck="false" placeholder="000.000.000-00 ou AA123456789BR"
-                   aria-describedby="hint">
+                   spellcheck="false" placeholder="AA123456789BR" aria-describedby="hint">
             <button class="btn-search" type="submit">Procurar</button>
           </div>
           <p class="hint" id="hint" role="status" aria-live="polite"></p>
@@ -340,7 +302,6 @@ summary:hover{background:var(--paper)}
         </div>
       </div>
 
-      <!-- painel de resultado -->
       <div class="result" id="result" tabindex="-1">
         <h2 id="result-title"></h2>
         <p id="result-text"></p>
@@ -363,15 +324,15 @@ summary:hover{background:var(--paper)}
         </li>
         <li>
           <h3>Separação e embalagem</h3>
-          <p>Conferimos cor, numeração e embalamos o par. O código de rastreio é gerado nesta etapa.</p>
+          <p>Conferimos cor, numeração e embalamos o par. O código de rastreio é gerado nesta etapa e vai para o seu e-mail.</p>
         </li>
         <li>
           <h3>Postagem na transportadora</h3>
-          <p>O rastreio passa a mostrar movimentações <strong>1 dia útil</strong> depois da confirmação do pagamento. Antes disso, é normal não aparecer nada.</p>
+          <p>O rastreio passa a mostrar movimentações <strong>1 dia útil</strong> depois da confirmação do pagamento. Antes disso, é normal a busca não retornar nada.</p>
         </li>
         <li>
           <h3>A caminho</h3>
-          <p>Cada troca de cidade ou centro de distribuição aparece como uma nova movimentação no site da transportadora.</p>
+          <p>Cada troca de cidade ou centro de distribuição aparece como uma nova movimentação na tela de rastreio.</p>
         </li>
         <li>
           <h3>Entregue</h3>
@@ -390,22 +351,28 @@ summary:hover{background:var(--paper)}
       </div>
       <div class="faq-list">
         <details>
+          <summary>Onde encontro o código de rastreio?</summary>
+          <div class="faq-body">
+            <p>No e-mail de postagem, enviado para o mesmo endereço usado na compra. Confira também a caixa de spam e a aba Promoções. Se não encontrar, chame no WhatsApp com o CPF da compra que enviamos o código na hora.</p>
+          </div>
+        </details>
+        <details>
           <summary>Busquei e não apareceu nenhuma informação</summary>
           <div class="faq-body">
             <p>O rastreamento só fica disponível 1 dia útil após a confirmação do pagamento. Se a compra foi feita hoje, ou em fim de semana e feriado, aguarde o próximo dia útil e tente de novo.</p>
-            <p>Se já se passaram mais de 2 dias úteis, fale com a gente pelo WhatsApp que verificamos o seu pedido.</p>
+            <p>Se já se passaram mais de 2 dias úteis, fale com a gente que verificamos o seu pedido.</p>
           </div>
         </details>
         <details>
-          <summary>Meu envio é SEDEX. Posso buscar pelo CPF?</summary>
+          <summary>Preciso saber qual é a transportadora antes de buscar?</summary>
           <div class="faq-body">
-            <p>Não. Para envios dos Correios só funciona o código de rastreio, aquele no formato AA123456789BR que enviamos por e-mail. A busca por CPF vale apenas para os envios da Jadlog.</p>
+            <p>Não. A mesma busca cobre Correios, Jadlog, Loggi, Azul Cargo, LATAM Cargo e Buslog. É só colar o código como ele veio no e-mail.</p>
           </div>
         </details>
         <details>
-          <summary>Onde encontro o código de rastreio?</summary>
+          <summary>Posso buscar pelo CPF?</summary>
           <div class="faq-body">
-            <p>No e-mail de postagem enviado para o mesmo endereço usado na compra. Confira também a caixa de spam ou a aba Promoções. Se não achar, peça o código pelo WhatsApp informando o CPF do pedido.</p>
+            <p>Não. A consulta é sempre pelo código de rastreio. Se você não tem o código em mãos, peça pelo WhatsApp informando o CPF da compra.</p>
           </div>
         </details>
         <details>
@@ -467,7 +434,7 @@ summary:hover{background:var(--paper)}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- formulário oculto: POST real para a Jadlog -->
+<!-- Fallback opcional: POST direto na Jadlog (usado só se CONFIG.fallbackJadlog = true) -->
 <form id="jadlog-form" method="POST" action="https://www.jadlog.com.br/siteInstitucional/tracking.jad" target="_blank" class="visually-hidden" aria-hidden="true">
   <input type="text" name="cte" id="jadlog-cte" tabindex="-1">
 </form>
@@ -476,12 +443,18 @@ summary:hover{background:var(--paper)}
 (function(){
   "use strict";
 
-  /* ------------------------------------------------------------------
-     CONFIGURAÇÃO — ajuste aqui se mudar transportadora ou contatos
-  ------------------------------------------------------------------ */
+  /* ==================================================================
+     CONFIGURAÇÃO
+     ------------------------------------------------------------------
+     urlRastreio: link direto do Melhor Rastreio. {codigo} é substituído
+     pelo que a cliente digitou. Confira o formato abrindo um rastreio
+     real no site deles e copiando a URL da barra de endereço; se for
+     diferente, troque só esta linha.
+     ================================================================== */
   var CONFIG = {
-    correiosOficial: "https://rastreamento.correios.com.br/app/index.php",
-    correiosAtalho:  "https://www.linkcorreios.com.br/?id=",
+    urlRastreio:     "https://melhorrastreio.com.br/rastreio/{codigo}",
+    urlRastreioHome: "https://melhorrastreio.com.br/",
+    fallbackJadlog:  false,   // true = oferece também a busca por CPF na Jadlog
     whatsapp:        "https://wa.me/551150281291?text=",
     maxRecentes:     4
   };
@@ -500,16 +473,7 @@ summary:hover{background:var(--paper)}
   document.getElementById("ano").textContent = new Date().getFullYear();
 
   /* ---------------- utilidades ---------------- */
-  function apenasDigitos(v){ return (v||"").replace(/\D/g,""); }
   function limpo(v){ return (v||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
-
-  function formataCPF(d){
-    d = d.slice(0,11);
-    if(d.length > 9) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,"$1.$2.$3-$4");
-    if(d.length > 6) return d.replace(/(\d{3})(\d{3})(\d{1,3})/,"$1.$2.$3");
-    if(d.length > 3) return d.replace(/(\d{3})(\d{1,3})/,"$1.$2");
-    return d;
-  }
 
   function cpfValido(d){
     if(d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
@@ -523,22 +487,24 @@ summary:hover{background:var(--paper)}
     return r === parseInt(d.charAt(10),10);
   }
 
-  /* Descobre o que a pessoa digitou:
-     - AA123456789BR .......... Correios
-     - 11 dígitos ............. CPF (Jadlog)
-     - 6 a 20 dígitos ......... código Jadlog (CTE / nota)
-  */
+  function nomeTransportadora(v){
+    if(/^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(v)) return "Correios";
+    if(/^[0-9]{11,14}$/.test(v))             return "Jadlog";
+    if(/^LOG/.test(v))                       return "Loggi";
+    return null;
+  }
+
+  /* Classifica o que foi digitado.
+     Tudo que parece um código válido vai para o Melhor Rastreio,
+     que identifica a transportadora sozinho. */
   function identificar(valor){
     var v = limpo(valor);
     if(!v) return {tipo:"vazio"};
-    if(/^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(v)) return {tipo:"correios", valor:v};
+    if(/^[A-Z]{2}[0-9]{9}[A-Z]{2}$/.test(v)) return {tipo:"codigo", valor:v, carrier:"Correios"};
     if(/^[A-Z]{2}[0-9]{9}$/.test(v))         return {tipo:"correios_incompleto", valor:v};
-    if(/^[0-9]+$/.test(v)){
-      if(v.length === 11) return {tipo:"cpf", valor:v, ok:cpfValido(v)};
-      if(v.length >= 6 && v.length <= 20) return {tipo:"jadlog", valor:v};
-      return {tipo:"numero_curto", valor:v};
-    }
-    return {tipo:"desconhecido", valor:v};
+    if(/^[0-9]{11}$/.test(v) && cpfValido(v)) return {tipo:"cpf", valor:v};
+    if(/^[A-Z0-9]{8,30}$/.test(v))           return {tipo:"codigo", valor:v, carrier:nomeTransportadora(v)};
+    return {tipo:"curto", valor:v};
   }
 
   function setHint(texto, estado){
@@ -558,40 +524,31 @@ summary:hover{background:var(--paper)}
       return navigator.clipboard.writeText(texto);
     }
     var ta = document.createElement("textarea");
-    ta.value = texto; ta.style.position="fixed"; ta.style.opacity="0";
+    ta.value = texto; ta.style.position = "fixed"; ta.style.opacity = "0";
     document.body.appendChild(ta); ta.select();
     try { document.execCommand("copy"); } catch(e){}
     document.body.removeChild(ta);
     return Promise.resolve();
   }
 
-  /* ---------------- máscara enquanto digita ---------------- */
-  input.addEventListener("input", function(){
-    var bruto = input.value;
-    var soDigitos = apenasDigitos(bruto);
-    var pareceCPF = /^[\d.\-\s]*$/.test(bruto) && soDigitos.length <= 11;
-
-    if(pareceCPF && soDigitos.length > 3){
-      var pos = input.selectionStart === bruto.length;
-      input.value = formataCPF(soDigitos);
-      if(pos) input.setSelectionRange(input.value.length, input.value.length);
-    }
-    input.classList.remove("is-invalid");
-
-    var info = identificar(input.value);
-    if(info.tipo === "correios")      setHint("Código dos Correios identificado.", "ok");
-    else if(info.tipo === "cpf" && info.ok) setHint("CPF identificado. Busca pela Jadlog.", "ok");
-    else if(info.tipo === "cpf")      setHint("Confira o CPF: um dos números parece trocado.", "error");
-    else if(info.tipo === "jadlog")   setHint("Código da Jadlog identificado.", "ok");
-    else setHint("");
-  });
-
-  /* ---------------- ações de busca ---------------- */
-  function abrirJadlog(codigo){
-    document.getElementById("jadlog-cte").value = codigo;
-    document.getElementById("jadlog-form").submit();
+  function linkRastreio(codigo){
+    return CONFIG.urlRastreio.replace("{codigo}", encodeURIComponent(codigo));
   }
 
+  /* ---------------- feedback enquanto digita ---------------- */
+  input.addEventListener("input", function(){
+    input.classList.remove("is-invalid");
+    var info = identificar(input.value);
+    if(info.tipo === "codigo"){
+      setHint(info.carrier ? "Código " + info.carrier + " identificado." : "Código válido.", "ok");
+    } else if(info.tipo === "cpf"){
+      setHint("A busca é pelo código de rastreio, não pelo CPF.", "error");
+    } else {
+      setHint("");
+    }
+  });
+
+  /* ---------------- resultado ---------------- */
   function mostrarResultado(titulo, texto, acoes){
     rTitle.textContent = titulo;
     rText.innerHTML = texto;
@@ -615,18 +572,18 @@ summary:hover{background:var(--paper)}
     result.scrollIntoView({behavior:"smooth", block:"nearest"});
   }
 
+  function abrirJadlog(codigo){
+    document.getElementById("jadlog-cte").value = codigo;
+    document.getElementById("jadlog-form").submit();
+  }
+
+  /* ---------------- busca ---------------- */
   function buscar(valorDigitado){
     var info = identificar(valorDigitado);
 
     if(info.tipo === "vazio"){
       input.classList.add("is-invalid");
-      setHint("Digite o CPF da compra ou o código de rastreio.", "error");
-      input.focus();
-      return;
-    }
-    if(info.tipo === "cpf" && !info.ok){
-      input.classList.add("is-invalid");
-      setHint("Confira o CPF: um dos números parece trocado.", "error");
+      setHint("Digite o código de rastreio que veio no seu e-mail.", "error");
       input.focus();
       return;
     }
@@ -636,45 +593,48 @@ summary:hover{background:var(--paper)}
       input.focus();
       return;
     }
-    if(info.tipo === "numero_curto" || info.tipo === "desconhecido"){
+    if(info.tipo === "cpf"){
       input.classList.add("is-invalid");
-      setHint("Não reconhecemos esse formato. Use o CPF (11 dígitos) ou o código de rastreio.", "error");
+      setHint("A busca é pelo código de rastreio.", "error");
+      var acoesCPF = [
+        {label:"Pedir meu código no WhatsApp",
+         href:CONFIG.whatsapp + encodeURIComponent("Olá! Não achei o código de rastreio do meu pedido. Meu CPF é " + info.valor + ".")}
+      ];
+      if(CONFIG.fallbackJadlog){
+        acoesCPF.push({label:"Tentar pelo CPF na Jadlog", ghost:true, onClick:function(){ abrirJadlog(info.valor); }});
+      }
+      mostrarResultado(
+        "Aqui a busca é pelo código",
+        "Esse número é um CPF. O código de rastreio tem letras e números, como AA123456789BR, e vai no e-mail de postagem. Se não encontrar, pedimos para você pelo WhatsApp.",
+        acoesCPF
+      );
+      return;
+    }
+    if(info.tipo === "curto"){
+      input.classList.add("is-invalid");
+      setHint("Não reconhecemos esse formato. Confira o código no e-mail de postagem.", "error");
       input.focus();
       return;
     }
 
-    salvarRecente(info);
+    /* código válido → Melhor Rastreio */
+    salvarRecente(info.valor);
+    var url = linkRastreio(info.valor);
+    window.open(url, "_blank", "noopener");
 
-    if(info.tipo === "correios"){
-      copiar(info.valor).then(function(){
-        toast("Código copiado. Cole no campo dos Correios.");
-      });
-      window.open(CONFIG.correiosOficial, "_blank", "noopener");
-      mostrarResultado(
-        "Rastreamento dos Correios aberto",
-        'O código <span class="result-code">' + info.valor + '</span> foi copiado. Se a nova aba não abrir, use os botões abaixo.',
-        [
-          {label:"Abrir Correios de novo", href:CONFIG.correiosOficial},
-          {label:"Ver por atalho direto", href:CONFIG.correiosAtalho + info.valor, ghost:true},
-          {label:"Copiar código", ghost:true, onClick:function(){ copiar(info.valor).then(function(){ toast("Código copiado."); }); }}
-        ]
-      );
-      setHint("Busca enviada aos Correios.", "ok");
-    } else {
-      abrirJadlog(info.valor);
-      var rotulo = info.tipo === "cpf" ? "CPF" : "código";
-      var mostrado = info.tipo === "cpf" ? formataCPF(info.valor) : info.valor;
-      mostrarResultado(
-        "Rastreamento da Jadlog aberto",
-        'Consultamos a Jadlog com o ' + rotulo + ' <span class="result-code">' + mostrado + '</span>. Se a nova aba não abrir, toque no botão abaixo.',
-        [
-          {label:"Abrir Jadlog de novo", onClick:function(){ abrirJadlog(info.valor); }},
-          {label:"É SEDEX? Buscar nos Correios", href:CONFIG.correiosOficial, ghost:true},
-          {label:"Não achei meu pedido", href:CONFIG.whatsapp + encodeURIComponent("Olá! Rastreei o pedido e não encontrei informações. Meu " + rotulo + " é " + mostrado + "."), ghost:true}
-        ]
-      );
-      setHint("Busca enviada à Jadlog.", "ok");
-    }
+    mostrarResultado(
+      "Rastreamento aberto em outra aba",
+      'Consultamos o código <span class="result-code">' + info.valor + '</span>' +
+      (info.carrier ? " na " + info.carrier : "") +
+      ". Se a nova aba não abrir, use os botões abaixo.",
+      [
+        {label:"Abrir rastreamento", href:url},
+        {label:"Copiar código", ghost:true, onClick:function(){ copiar(info.valor).then(function(){ toast("Código copiado."); }); }},
+        {label:"Não achei meu pedido", ghost:true,
+         href:CONFIG.whatsapp + encodeURIComponent("Olá! Rastreei o código " + info.valor + " e não encontrei informações sobre o meu pedido.")}
+      ]
+    );
+    setHint("Busca enviada.", "ok");
   }
 
   form.addEventListener("submit", function(e){
@@ -692,27 +652,22 @@ summary:hover{background:var(--paper)}
   function gravarRecentes(lista){
     try { localStorage.setItem(CHAVE, JSON.stringify(lista)); } catch(e){}
   }
-  function salvarRecente(info){
-    var item = {v:info.valor, t:info.tipo};
-    var lista = lerRecentes().filter(function(x){ return x.v !== item.v; });
-    lista.unshift(item);
+  function salvarRecente(codigo){
+    var lista = lerRecentes().filter(function(x){ return x !== codigo; });
+    lista.unshift(codigo);
     gravarRecentes(lista.slice(0, CONFIG.maxRecentes));
     renderRecentes();
-  }
-  function rotuloRecente(item){
-    if(item.t === "cpf") return formataCPF(item.v);
-    return item.v;
   }
   function renderRecentes(){
     var lista = lerRecentes();
     recentList.innerHTML = "";
     if(!lista.length){ recentBox.classList.remove("is-visible"); return; }
-    lista.forEach(function(item){
+    lista.forEach(function(codigo){
       var b = document.createElement("button");
-      b.type = "button"; b.className = "chip"; b.textContent = rotuloRecente(item);
+      b.type = "button"; b.className = "chip"; b.textContent = codigo;
       b.addEventListener("click", function(){
-        input.value = rotuloRecente(item);
-        buscar(input.value);
+        input.value = codigo;
+        buscar(codigo);
       });
       recentList.appendChild(b);
     });
@@ -726,13 +681,12 @@ summary:hover{background:var(--paper)}
   }
   renderRecentes();
 
-  /* ---------------- link direto: ?codigo=XX ou ?cpf=XX ---------------- */
+  /* ---------------- link direto: ?codigo=XX&auto=1 ---------------- */
   (function preencherPelaURL(){
     var p = new URLSearchParams(window.location.search);
-    var v = p.get("codigo") || p.get("cpf") || p.get("cte");
+    var v = p.get("codigo") || p.get("code") || p.get("rastreio");
     if(!v) return;
-    var info = identificar(v);
-    input.value = info.tipo === "cpf" ? formataCPF(info.valor) : (info.valor || v);
+    input.value = limpo(v);
     input.dispatchEvent(new Event("input"));
     if(p.get("auto") === "1") buscar(input.value);
   })();

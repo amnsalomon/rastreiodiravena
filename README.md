@@ -1,37 +1,50 @@
 # Rastreio diRavena
 
-Página estática de rastreamento de pedidos da loja diRavena. Um único arquivo `index.html`, sem build e sem dependências além da fonte Manrope (Google Fonts).
+Página estática de rastreamento de pedidos da loja diRavena. Um único arquivo `index.html`, sem build e sem dependências além da fonte Manrope (Google Fonts). As consultas são feitas no **Melhor Rastreio**, que cobre Correios, Jadlog, Loggi, Azul Cargo, LATAM Cargo e Buslog em uma busca só.
+
+## Antes de publicar: confirme o formato do link
+
+O Melhor Rastreio é uma aplicação JavaScript, então o formato da URL de um rastreio precisa ser conferido na prática:
+
+1. Abra `melhorrastreio.com.br` e pesquise um código real de um pedido já postado.
+2. Copie a URL que aparece na barra de endereço.
+3. Se ela não for `https://melhorrastreio.com.br/rastreio/CODIGO`, ajuste a linha `urlRastreio` no objeto `CONFIG`, dentro do `<script>`, mantendo o marcador `{codigo}` no lugar do código.
+
+Se o link direto não existir, deixe `urlRastreio` apontando para a home (`https://melhorrastreio.com.br/`): a página continua funcionando, porque copia o código para a área de transferência e mostra o botão de copiar no painel de resultado.
 
 ## Como publicar no GitHub Pages
 
-1. Crie um repositório (ex.: `rastreio-diravena`) e envie o `index.html` para a raiz da branch `main`.
-2. No repositório: **Settings → Pages → Source: Deploy from a branch**, branch `main`, pasta `/ (root)`.
-3. A página fica em `https://SEU-USUARIO.github.io/rastreio-diravena/`.
-4. Domínio próprio (ex.: `rastreio.diravena.com.br`): crie um arquivo `CNAME` na raiz com o domínio dentro, e no DNS aponte um registro CNAME para `SEU-USUARIO.github.io`. Depois marque **Enforce HTTPS** em Settings → Pages.
-5. Na Shopify, troque o link "Rastrear Pedido" do menu para esse endereço.
+1. Envie o `index.html` para a raiz da branch `main`.
+2. **Settings → Pages → Source: Deploy from a branch**, branch `main`, pasta `/ (root)`.
+3. Domínio próprio: **Settings → Pages → Custom domain** com `rastrear.diravena.com.br` e, no Cloudflare, um CNAME `rastrear` apontando para `SEU-USUARIO.github.io` em modo DNS only.
 
 ## Como a busca funciona
 
-O campo é único e a transportadora é identificada pelo formato do que a cliente digita:
+Um campo só. O texto é normalizado (maiúsculas, sem espaços e pontuação) e classificado:
 
-| O que foi digitado | Destino |
+| O que foi digitado | O que acontece |
 |---|---|
-| `AA123456789BR` (2 letras + 9 números + 2 letras) | Correios — abre o rastreamento e copia o código para a área de transferência |
-| 11 dígitos com dígito verificador válido | Jadlog — POST no campo `cte` para `tracking.jad` |
-| 6 a 20 dígitos | Jadlog — tratado como código/CTE |
+| `AA123456789BR` | Abre o rastreio e informa que é dos Correios |
+| 11 a 14 dígitos | Abre o rastreio e informa que é da Jadlog |
+| Outro código de 8 a 30 caracteres | Abre o rastreio sem nomear a transportadora |
+| `AA123456789` (sem o BR final) | Avisa que faltam as duas letras finais |
+| 11 dígitos que formam um CPF válido | Explica que a busca é pelo código e oferece pedir o código no WhatsApp |
 
-O POST para a Jadlog é feito por um formulário oculto com `target="_blank"`, então a cliente não perde a página de rastreio. Os Correios não aceitam código por URL no site oficial, por isso a página copia o código e abre o site; há também um botão secundário com atalho que já preenche.
+O rastreio abre em nova aba, então a cliente não perde esta página nem os botões de ajuda.
+
+## Fallback da Jadlog por CPF
+
+A busca por CPF na Jadlog continua no código, desligada. Para reativá-la como opção secundária na tela de CPF, mude `fallbackJadlog` para `true` em `CONFIG`. O formulário oculto que faz o POST em `tracking.jad` está no fim do HTML.
 
 ## Link direto
 
-Dá para mandar o link já preenchido por e-mail ou WhatsApp:
-
 - `...?codigo=AA123456789BR` — preenche o campo
 - `...?codigo=AA123456789BR&auto=1` — preenche e busca sozinho
-- `...?cpf=12345678909` — também funciona
+
+Serve para o e-mail de postagem: a cliente clica e cai direto no rastreio, passando pela sua marca no caminho.
 
 ## O que ajustar
 
-No topo do `<script>`, no objeto `CONFIG`, ficam as URLs das transportadoras, o número do WhatsApp e quantas buscas recentes guardar. Cores e tipografia estão nas variáveis CSS em `:root` (`--gold: #ebb114` é o dourado da loja).
+`CONFIG`, no topo do `<script>`: URLs do Melhor Rastreio, WhatsApp, fallback da Jadlog e quantas buscas recentes guardar. Cores e tipografia nas variáveis CSS em `:root` (`--gold: #ebb114` é o dourado da loja).
 
-As buscas recentes ficam só no navegador da cliente (`localStorage`), nada é enviado para nenhum servidor além do próprio site da transportadora.
+As buscas recentes ficam só no navegador da cliente (`localStorage`).
